@@ -6,6 +6,30 @@ import { playSnoopdog, playAnimeAhh } from './player';
 
 const log = vscode.window.createOutputChannel('Faah!');
 
+let lastPullSoundTime = 0;
+let lastPushSoundTime = 0;
+const COOLDOWN_MS = 10000;
+
+function canPlayPull(): boolean {
+  const now = Date.now();
+  if (now - lastPullSoundTime < COOLDOWN_MS) {
+    log.appendLine('[Faah!] Pull sound skipped — cooldown active');
+    return false;
+  }
+  lastPullSoundTime = now;
+  return true;
+}
+
+function canPlayPush(): boolean {
+  const now = Date.now();
+  if (now - lastPushSoundTime < COOLDOWN_MS) {
+    log.appendLine('[Faah!] Push sound skipped — cooldown active');
+    return false;
+  }
+  lastPushSoundTime = now;
+  return true;
+}
+
 export function activateGitPushPullWatcher(context: vscode.ExtensionContext): void {
   const config = () => vscode.workspace.getConfiguration('faah');
 
@@ -38,8 +62,8 @@ function watchTerminalCommands(
       }
 
       if (/^git\s+push\b/i.test(cmd)) {
-        log.appendLine('[Faah!] Detected git push!');
-        if (config().get<boolean>('playSoundOnPush', true)) {
+        log.appendLine('[Faah!] Detected git push via terminal');
+        if (config().get<boolean>('playSoundOnPush', true) && canPlayPush()) {
           playSnoopdog();
           vscode.window.setStatusBarMessage(
             '$(cloud-upload) Pushed! *drop it like it\'s hot*',
@@ -49,8 +73,8 @@ function watchTerminalCommands(
       }
 
       if (/^git\s+pull\b/i.test(cmd)) {
-        log.appendLine('[Faah!] Detected git pull!');
-        if (config().get<boolean>('playSoundOnPull', true)) {
+        log.appendLine('[Faah!] Detected git pull via terminal');
+        if (config().get<boolean>('playSoundOnPull', true) && canPlayPull()) {
           playAnimeAhh();
           vscode.window.setStatusBarMessage(
             '$(cloud-download) Pulled! *anime-ahh*',
@@ -78,7 +102,7 @@ function watchTasks(
       }
 
       if (taskName.includes('push')) {
-        if (config().get<boolean>('playSoundOnPush', true)) {
+        if (config().get<boolean>('playSoundOnPush', true) && canPlayPush()) {
           playSnoopdog();
           vscode.window.setStatusBarMessage(
             '$(cloud-upload) Pushed! *drop it like it\'s hot*',
@@ -88,7 +112,7 @@ function watchTasks(
       }
 
       if (taskName.includes('pull') && !taskName.includes('pull request')) {
-        if (config().get<boolean>('playSoundOnPull', true)) {
+        if (config().get<boolean>('playSoundOnPull', true) && canPlayPull()) {
           playAnimeAhh();
           vscode.window.setStatusBarMessage(
             '$(cloud-download) Pulled! *anime-ahh*',
@@ -137,7 +161,7 @@ function watchGitRefs(
       log.appendLine(`[Faah!] FETCH_HEAD changed (${lastFetchHead} -> ${currentFetchHead})`);
       lastFetchHead = currentFetchHead;
 
-      if (config().get<boolean>('playSoundOnPull', true)) {
+      if (config().get<boolean>('playSoundOnPull', true) && canPlayPull()) {
         log.appendLine('[Faah!] Playing anime-ahh for pull/fetch');
         playAnimeAhh();
         vscode.window.setStatusBarMessage(
@@ -153,7 +177,7 @@ function watchGitRefs(
       if (currentFetchHead === lastFetchHead) {
         log.appendLine('[Faah!] Remote refs changed — likely a push');
 
-        if (config().get<boolean>('playSoundOnPush', true)) {
+        if (config().get<boolean>('playSoundOnPush', true) && canPlayPush()) {
           log.appendLine('[Faah!] Playing snoopdog for push');
           playSnoopdog();
           vscode.window.setStatusBarMessage(
