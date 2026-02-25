@@ -1,0 +1,102 @@
+{
+  "name": "vscode-faah",
+  "displayName": "Faah! — Sound Effects for Devs",
+  "description": "Plays a legendary \"FAAAAH\" sound when your tests fail and a clap sound when you merge. Because coding should have a soundtrack.",
+  "version": "0.1.0",
+  "publisher": "anurag",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "sound",
+    "fun",
+    "test",
+    "fail",
+    "merge",
+    "clap",
+    "faah"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "faah.playFaah",
+        "title": "Faah! Play fail sound"
+      },
+      {
+        "command": "faah.playClap",
+        "title": "Faah! Play clap sound"
+      },
+      {
+        "command": "faah.playSnoopdog",
+        "title": "Faah! Play push sound (Snoop Dogg)"
+      },
+      {
+        "command": "faah.playAnimeAhh",
+        "title": "Faah! Play pull sound (Anime Ahh)"
+      },
+      {
+        "command": "faah.toggleEnabled",
+        "title": "Faah! Toggle sounds on/off"
+      }
+    ],
+    "configuration": {
+      "title": "Faah!",
+      "properties": {
+        "faah.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable all sound effects."
+        },
+        "faah.volume": {
+          "type": "number",
+          "default": 0.7,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Volume level for sound effects (0.0 to 1.0)."
+        },
+        "faah.playSoundOnTestFail": {
+          "type": "boolean",
+          "default": true,
+          "description": "Play the legendary FAAAAH sound when tests fail."
+        },
+        "faah.playSoundOnMerge": {
+          "type": "boolean",
+          "default": true,
+          "description": "Play the clap sound when you complete a git merge."
+        },
+        "faah.playSoundOnPush": {
+          "type": "boolean",
+          "default": true,
+          "description": "Play the Snoop Dogg sound when you git push."
+        },
+        "faah.playSoundOnPull": {
+          "type": "boolean",
+          "default": true,
+          "description": "Play the Anime Ahh sound when you git pull."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "play-sound": "^1.1.6"
+  }
+}
