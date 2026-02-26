@@ -1,9 +1,14 @@
 {
   "name": "vscode-faah",
   "displayName": "Faah! — Sound Effects for Devs",
-  "description": "Plays a legendary \"FAAAAH\" sound when your tests fail and a clap sound when you merge. Because coding should have a soundtrack.",
+  "description": "Plays a legendary \"FAAAAH\" sound when your tests fail, clap on merge, Snoop Dogg on push, and anime-ahh on pull. Because coding should have a soundtrack.",
   "version": "0.1.0",
-  "publisher": "anurag",
+  "publisher": "ycwhencpp",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ycwhencpp/vscode-git-sound-extension"
+  },
   "engines": {
     "vscode": "^1.85.0"
   },
